@@ -17,6 +17,7 @@
     "eslint-comments/no-use": "off",
     "import/no-namespace": "off",
     "no-unused-vars": "off",
+    "filenames/match-regex": "off",
     "@typescript-eslint/no-unused-vars": "error",
     "@typescript-eslint/explicit-member-accessibility": [
       "error",
@@ -67,7 +68,7 @@
     ],
     "@typescript-eslint/type-annotation-spacing": "error",
     "@typescript-eslint/unbound-method": "error",
-    "no-console": "off",
+    "no-console": "off"
   },
   "env": {
     "node": true,

@@ -1,4 +1,4 @@
-export const isUrl = (url: string) => {
+export const isUrl = (url: string): boolean => {
   try {
     new URL(url)
     return true
