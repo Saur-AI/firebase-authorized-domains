@@ -34,6 +34,20 @@ review apps right away after deployment.
     action: add 
 ```
 
+### Add a domain to authorized domains and OAuth client
+
+```yaml
+- name: Update Firebase Authorized Domains and OAuth Client
+  uses: wavezync/firebase-authorized-domains@v1.0.0
+  with:
+    service_account_key_json: ${{ secrets.service_account_key_json }}
+    domain: "https://example.com"
+    action: add
+    oauth_client_id: "123456789.apps.googleusercontent.com"
+```
+
+When the `oauth_client_id` parameter is provided, the action will also add the domain to the authorized JavaScript origins for the specified OAuth 2.0 client in Google Auth Platform.
+
 ### Remove a domain to authorized domains
 
 ```yaml

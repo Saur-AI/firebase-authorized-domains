@@ -20,6 +20,12 @@ inputs:
     required: true
     description: >-
       Domain to add or remove
+  oauth_client_id:
+    required: false
+    description: >-
+      Optional OAuth 2.0 Client ID to also authorize the domain with.
+      If provided, the domain will be added to or removed from the authorized JavaScript origins
+      for this OAuth client in Google Auth Platform.
 runs:
   using: "node16"
   main: "dist/index.js"
