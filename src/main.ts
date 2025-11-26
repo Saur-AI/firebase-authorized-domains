@@ -24,7 +24,7 @@ async function run(): Promise<void> {
     await updateAuthorizedDomain(
       action as Action,
       finalDomain,
-      JSON.parse(svc_account_key_json) as any
+      JSON.parse(svc_account_key_json)
     )
     core.debug('Action completed successfully')
   } catch (error) {
