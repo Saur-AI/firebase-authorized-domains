@@ -35,7 +35,12 @@ export const updateOAuthClientOrigins = async (
   const projectId = await auth.getProjectId()
 
   // Construct the full domain URL (https://domain)
-  const domainUrl = `https://${domain}`
+  // Check if domain already has a protocol to avoid creating malformed URLs
+  const domainUrl = domain.startsWith('https://')
+    ? domain
+    : domain.startsWith('http://')
+    ? domain.replace('http://', 'https://')
+    : `https://${domain}`
 
   core.debug(`Project ID: ${projectId}`)
   core.debug(`OAuth Client ID: ${oauthClientId}`)
@@ -49,7 +54,11 @@ export const updateOAuthClientOrigins = async (
   const accessToken = accessTokenResponse.token
 
   // Use Google Cloud Platform's internal API endpoint for OAuth client management
-  // This is the same endpoint used by the Cloud Console
+  // Note: These endpoints (:getOAuthClient and :updateOAuthClient) are not officially
+  // documented in the Cloud Resource Manager API documentation. They are internal
+  // endpoints used by the Google Cloud Console UI. While functional, they may change
+  // without notice. If these endpoints become unavailable, the action will gracefully
+  // fall back with a warning message directing users to manually update OAuth clients.
   const baseUrl = 'https://cloudresourcemanager.googleapis.com/v1'
   const clientUrl = `${baseUrl}/projects/${projectId}:getOAuthClient`
 
@@ -93,10 +102,10 @@ export const updateOAuthClientOrigins = async (
 
     if (action === 'add') {
       core.debug(`Adding ${domainUrl} to OAuth client ${oauthClientId}`)
-      console.log(`Adding ${domainUrl} to OAuth client ${oauthClientId}`)
+      core.info(`Adding ${domainUrl} to OAuth client ${oauthClientId}`)
 
       if (currentOrigins.includes(domainUrl)) {
-        console.log(
+        core.info(
           `Domain ${domainUrl} already exists in OAuth client ${oauthClientId}`
         )
         return
@@ -106,10 +115,10 @@ export const updateOAuthClientOrigins = async (
     } else {
       // action === 'remove'
       core.debug(`Removing ${domainUrl} from OAuth client ${oauthClientId}`)
-      console.log(`Removing ${domainUrl} from OAuth client ${oauthClientId}`)
+      core.info(`Removing ${domainUrl} from OAuth client ${oauthClientId}`)
 
       if (!currentOrigins.includes(domainUrl)) {
-        console.log(
+        core.info(
           `Domain ${domainUrl} does not exist in OAuth client ${oauthClientId}`
         )
         return
@@ -149,11 +158,11 @@ export const updateOAuthClientOrigins = async (
     core.debug(JSON.stringify(updateResult, null, 2))
 
     if (action === 'add') {
-      console.log(
+      core.info(
         `Successfully added ${domainUrl} to OAuth client ${oauthClientId}`
       )
     } else {
-      console.log(
+      core.info(
         `Successfully removed ${domainUrl} from OAuth client ${oauthClientId}`
       )
     }
